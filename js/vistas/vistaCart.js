@@ -20,8 +20,11 @@ VistaCart.prototype = {
     $('.newItem').remove();   
     var carro = carroObj.cart;
     var subtotal = carroObj.subtotal;
+    var total = carroObj.total;
     var $subTotal = $('.cart-summary');
     $subTotal.find('h5').html('Subtotal: $' + subtotal); 
+    var $total = $('#cart-qty');
+    $total.html(total);
     // this.actualizarCarro(carro);
     carro.forEach(function(el){
       var $template = $('#template');
@@ -35,7 +38,7 @@ VistaCart.prototype = {
       $clone.find('h4').html(`<span class="qty">${el.cant}x</span>$${el.price}`);
       $clone.find('button.delete').click(function() {
         controlador.deleteToCart(id);
-        });      
+        });     
       $clone.insertBefore($template);           
     });
   },

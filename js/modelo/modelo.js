@@ -5,6 +5,7 @@ var Modelo = function() {
   this.whishList = [];
   this.cart = [];
   this.subtotal = 0;
+  this.cantidad = 0;
   contexto = this;
   //inicializacion de eventos
   this.itemAgregadoAWhishList = new Evento(this);
@@ -30,8 +31,8 @@ Modelo.prototype = {
   },
 
   //se guardan en el local storage
-  guardar: function(dest,element){
-    localStorage.setItem(dest,JSON.stringify(element));
+  guardar: function(dest, element){
+    localStorage.setItem(dest, JSON.stringify(element));
   },
 
   getWishList: function() {
@@ -52,7 +53,8 @@ Modelo.prototype = {
       this.cart = JSON.parse(listaCarro);
     };
     this.calcularSubtotal();
-    this.carritoLlenado.notificar({cart: this.cart, subtotal: this.subtotal});
+    this.calcularTotal();
+    this.carritoLlenado.notificar({cart: this.cart, subtotal: this.subtotal, total: this.total});
   },
 
   addToCart: function(productObj){
@@ -67,8 +69,10 @@ Modelo.prototype = {
       this.cart[index].cant++;
     }
     this.calcularSubtotal();
+    this.calcularTotal();
+    //this.subtotal = subtotal;
     this.guardar("miCarrito",this.cart);
-    this.carritoLlenado.notificar({cart: this.cart, subtotal: this.subtotal})
+    this.carritoLlenado.notificar({cart: this.cart, subtotal: this.subtotal, total: this.total})
     
   },
 
@@ -84,15 +88,24 @@ Modelo.prototype = {
       }
     }
     this.calcularSubtotal();
+    this.calcularTotal();
     this.guardar("miCarrito",this.cart);   
-    this.carritoLlenado.notificar({cart: this.cart, subtotal: this.subtotal});
+    this.carritoLlenado.notificar({cart: this.cart, subtotal: this.subtotal, total: this.total});
   },
 
   calcularSubtotal: function() {
+    contexto.subtotal = 0;
     this.cart.forEach(function(element){
-      contexto.subtotal = element.price * element.cant;
+      contexto.subtotal += element.price * element.cant;
     });
   },
   
+  calcularTotal: function() {
+    contexto.total = 0;
+    this.cart.forEach(function(element){
+      contexto.total += element.cant;
+    });
+  }
+
 };
 
