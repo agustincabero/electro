@@ -23,6 +23,7 @@ var VistaWishList = function(modelo, controlador) {
 
 VistaWishList.prototype = {
   inicializar: function() {
+    this.controlador.loadWishList();
   },
   actualizarVistaCantidad: function(cant){
     $("#wishlist-qty").html(cant);

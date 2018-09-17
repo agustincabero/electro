@@ -4,6 +4,10 @@ var VistaItems = function(modelo, controlador) {
   var contexto = this;
 
   // suscripción de observadores
+  this.modelo.productsReady.suscribir(function(modelo, products) {
+    contexto.actualizarProductos(products);
+  });
+
   this.modelo.itemAgregadoAWhishList.suscribir(function(modelo, productID) {
     contexto.prenderCorazon(productID);
   });
@@ -12,16 +16,10 @@ var VistaItems = function(modelo, controlador) {
     contexto.apagarCorazon(productID);
   });
 
-  this.modelo.wishListReady.suscribir(function(modelo,whishList){
-    
-    for (var x = 0; x < whishList.length; x++){
-      contexto.prenderCorazon(whishList[x]);
-    }
-    /*
-    whishList.forEach(function(element) {
-      contexto.prenderCorazon(element);
-    });
-    */
+  this.modelo.wishListReady.suscribir(function(modelo, whishList){    
+    for (var i = 0; i < whishList.length; i++){
+      contexto.prenderCorazon(whishList[i]);
+    }  
   });
 };
 
@@ -29,8 +27,22 @@ var VistaItems = function(modelo, controlador) {
 
 VistaItems.prototype = {
   inicializar: function() {
+    this.controlador.loadProducts();
+  },
+
+  actualizarProductos: function(products) {
+    var products = products;
+    products.forEach(function(el){
+      var $template = $('#templateItm');
+      var $clone = $template.clone();
+      $clone.removeClass('hide');
+      $clone.find('div.product').attr('id', el._id);
+      $clone.find('img').attr('src', el.pictureUrl);
+      $clone.find('a').html(el.name);
+      $clone.find('h4').html(`$${el.price} <del class="product-old-price">$${el.oldPrice}</del>`);   
+      $clone.insertBefore($template);           
+    });
     this.configuracionDeBotones();
-    this.controlador.loadWishList();
   },
 
   configuracionDeBotones: function(){
@@ -40,6 +52,7 @@ VistaItems.prototype = {
       var id = $(this).closest("div.product").attr("id");
       contexto.controlador.addToWishlist(id);
     });
+
     $("button.add-to-cart-btn").click(function() {
       var id = $(this).closest("div.product").attr("id");
       var productName = $("div#"+id).find("a").text();

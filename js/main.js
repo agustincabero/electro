@@ -162,7 +162,9 @@ var controlador = new Controlador(modelo);
 var vistaItems = new VistaItems(modelo, controlador);
 var vistaWhishList = new VistaWishList(modelo, controlador);
 var vistaCart = new VistaCart(modelo, controlador);
+var vistaLogIn = new VistaLogIn(modelo, controlador);
 
 vistaItems.inicializar();
 vistaWhishList.inicializar();
 vistaCart.inicializar();
+vistaLogIn.inicializar();

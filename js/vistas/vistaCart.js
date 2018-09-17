@@ -25,7 +25,7 @@ VistaCart.prototype = {
     $subTotal.find('h5').html('Subtotal: $' + subtotal); 
     var $total = $('#cart-qty');
     $total.html(total);
-    // this.actualizarCarro(carro);
+    
     carro.forEach(function(el){
       var $template = $('#template');
       var $clone = $template.clone();

@@ -6,7 +6,16 @@ var Controlador = function(modelo) {
 };
 
 Controlador.prototype = {
+  logIn: function(user, pass) {
+    this.modelo.logIn(user, pass);
+  },
+
+  loadProducts: function() {
+    this.modelo.loadProducts();
+  },
+
   addToWishlist: function(productID) {
+    console.log(productID);
     this.lista = this.modelo.getWishList();
     if (!this.lista.includes(productID)){
       this.modelo.addToWishlist(productID);
@@ -14,6 +23,7 @@ Controlador.prototype = {
       this.modelo.removeFromWishlist(productID);
     }
   },
+  
   addToCart: function(productObj) {
     productObj.price = parseFloat(productObj.price.replace("$",""));
     productObj.cant = 1;
@@ -30,5 +40,4 @@ Controlador.prototype = {
   deleteToCart: function(id) {
     this.modelo.removeToCart(id);
   }
-
 };

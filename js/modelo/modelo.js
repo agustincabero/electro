@@ -5,16 +5,31 @@ var Modelo = function() {
   this.whishList = [];
   this.cart = [];
   this.subtotal = 0;
-  this.cantidad = 0;
-  contexto = this;
+  this.total = 0;
+  this.token = "";
+  
   //inicializacion de eventos
   this.itemAgregadoAWhishList = new Evento(this);
   this.itemEliminadoDeWhishList = new Evento(this);
   this.wishListReady = new Evento(this);
   this.carritoLlenado = new Evento(this);
+  this.userLogged = new Evento(this);
+  this.productsReady = new Evento(this);
 };
 
 Modelo.prototype = {
+  loadProducts: function() {
+    var contexto = this;
+    $.ajax({
+      method: "GET",
+      url: "http://ecommerce.casu-net.com.ar/api/products",
+    })
+    .done(function( body ) {
+      var response = body;    
+      contexto.productsReady.notificar(response);
+    });
+  },
+
   addToWishlist: function(productID) {
     this.whishList.push(productID);
     this.itemAgregadoAWhishList.notificar(productID);
@@ -94,18 +109,38 @@ Modelo.prototype = {
   },
 
   calcularSubtotal: function() {
-    contexto.subtotal = 0;
+    var contexto = this;
+    this.subtotal = 0;
     this.cart.forEach(function(element){
       contexto.subtotal += element.price * element.cant;
     });
   },
   
   calcularTotal: function() {
-    contexto.total = 0;
+    var contexto = this;
+    this.total = 0;
     this.cart.forEach(function(element){
       contexto.total += element.cant;
+    });
+  },
+
+  logIn: function(user, pass) {
+    var contexto = this;
+    $.ajax({
+      method: "POST",
+      url: "http://ecommerce.casu-net.com.ar/api/users/authenticate",
+      data: { email: user, password: pass }
+    })
+    .done(function( body ) {
+      var response = body;
+      contexto.token = response.token;
+      contexto.guardar('token', contexto.token);
+      contexto.userLogged.notificar(response.user.firstname);
+    })
+    .error(function( body ){
+      var response = body;
+      contexto.userLogged.notificar(response.status);
     });
   }
 
 };
-
