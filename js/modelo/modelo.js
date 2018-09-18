@@ -6,7 +6,7 @@ var Modelo = function() {
   this.cart = [];
   this.subtotal = 0;
   this.total = 0;
-  this.token = "";
+  this.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Yjk4NTcwMzkxMzNhZDQ5ZmZkYTFhZTMiLCJlbWFpbCI6ImFndXN0aW5AbGF0ZXJhbHZpZXcubmV0IiwiaWF0IjoxNTM3MjI4MjAyLCJleHAiOjE1MzczMTQ2MDJ9.5cgqaW5J0mjo1C3AV3qJDu-g9_yWcWwLMJ5DEFGiDYY";
   
   //inicializacion de eventos
   this.itemAgregadoAWhishList = new Evento(this);
@@ -18,6 +18,7 @@ var Modelo = function() {
 };
 
 Modelo.prototype = {
+  
   loadProducts: function() {
     var contexto = this;
     $.ajax({
@@ -31,18 +32,34 @@ Modelo.prototype = {
   },
 
   addToWishlist: function(productID) {
-    this.whishList.push(productID);
-    this.itemAgregadoAWhishList.notificar(productID);
-    this.guardar("wishListItems",this.whishList);
+    var contexto = this;
+    $.ajax({
+      method: "POST",
+      url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+      headers: { "x-access-token": contexto.token },
+      data: {
+        productId: productID,
+      }
+    })
+    .done(function( body ) {
+      contexto.itemAgregadoAWhishList.notificar(productID);
+    });
   },
 
   removeFromWishlist: function(productID){
-    var index = this.whishList.indexOf(productID);
-    if (index > -1) {
-      this.whishList.splice(index, 1);
-      this.itemEliminadoDeWhishList.notificar(productID);
-      this.guardar("wishListItems",this.whishList);
-    }
+    var contexto = this;
+    $.ajax({
+      method: "POST",
+      url: "http://ecommerce.casu-net.com.ar/api/whishlist/"+productID,
+      headers: { "x-access-token": contexto.token },
+      data: {
+        productId: productID,
+      }
+    })
+    .done(function( body ) {
+      console.log(body);
+      contexto.itemEliminadoDeWhishList.notificar(productID);
+    });
   },
 
   //se guardan en el local storage
@@ -51,15 +68,40 @@ Modelo.prototype = {
   },
 
   getWishList: function() {
-    return this.whishList;
+    var contexto = this;
+    $.ajax({
+      method: "GET",
+      url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+      headers: { "x-access-token": contexto.token }
+    })
+    .done(function( body ) {
+      var response = body;
+      response.forEach(function(el){
+        contexto.whishList.push(el._id)           
+      });
+      console.log(contexto.whishList);
+      return contexto.whishList;
+    });
+    // .error(function( body ){
+    //   var response = body;
+    //   contexto.userLogged.notificar(response.status);
+    // });
   },
 
   cargarWishList: function(){
-    var lista = localStorage.getItem("wishListItems");
-    if(lista) {
-      this.whishList = JSON.parse(lista);
-    }
-    this.wishListReady.notificar(this.whishList);
+    var contexto = this;
+    $.ajax({
+      method: "GET",
+      url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+      headers: { "x-access-token": contexto.token }
+    })
+    .done(function( body ) {
+      var response = body;
+      response.forEach(function(el){
+        contexto.whishList.push(el._id)           
+      });
+      contexto.wishListReady.notificar(contexto.whishList);
+    });
   },
 
   cargarCart: function(){

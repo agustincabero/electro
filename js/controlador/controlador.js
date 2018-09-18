@@ -15,9 +15,9 @@ Controlador.prototype = {
   },
 
   addToWishlist: function(productID) {
-    console.log(productID);
     this.lista = this.modelo.getWishList();
-    if (!this.lista.includes(productID)){
+    console.log(this.lista);
+    if (!this.modelo.getWishList().includes(productID)){
       this.modelo.addToWishlist(productID);
     } else {
       this.modelo.removeFromWishlist(productID);

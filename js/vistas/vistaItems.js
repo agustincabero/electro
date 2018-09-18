@@ -16,9 +16,9 @@ var VistaItems = function(modelo, controlador) {
     contexto.apagarCorazon(productID);
   });
 
-  this.modelo.wishListReady.suscribir(function(modelo, whishList){    
-    for (var i = 0; i < whishList.length; i++){
-      contexto.prenderCorazon(whishList[i]);
+  this.modelo.wishListReady.suscribir(function(modelo, wishList){
+    for (var i = 0; i < wishList.length; i++){
+      contexto.prenderCorazon(wishList[i]);
     }  
   });
 };
