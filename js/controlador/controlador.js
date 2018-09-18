@@ -15,9 +15,8 @@ Controlador.prototype = {
   },
 
   addToWishlist: function(productID) {
-    this.lista = this.modelo.getWishList();
-    console.log(this.lista);
-    if (!this.modelo.getWishList().includes(productID)){
+    var lista = this.modelo.getWishList();
+    if (!lista.includes(productID)){
       this.modelo.addToWishlist(productID);
     } else {
       this.modelo.removeFromWishlist(productID);
@@ -29,6 +28,7 @@ Controlador.prototype = {
     productObj.cant = 1;
     this.modelo.addToCart(productObj);
   },
+  
   loadWishList: function(){
     this.modelo.cargarWishList();
   },

@@ -79,13 +79,8 @@ Modelo.prototype = {
       response.forEach(function(el){
         contexto.whishList.push(el._id)           
       });
-      console.log(contexto.whishList);
       return contexto.whishList;
     });
-    // .error(function( body ){
-    //   var response = body;
-    //   contexto.userLogged.notificar(response.status);
-    // });
   },
 
   cargarWishList: function(){
