@@ -35,7 +35,7 @@ Modelo.prototype = {
     var contexto = this;
     $.ajax({
       method: "POST",
-      url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+      url: "http://ecommerce.casu-net.com.ar/api/wishlist",
       headers: { "x-access-token": contexto.token },
       data: {
         productId: productID,
@@ -50,7 +50,7 @@ Modelo.prototype = {
     var contexto = this;
     $.ajax({
       method: "POST",
-      url: "http://ecommerce.casu-net.com.ar/api/whishlist/"+productID,
+      url: "http://ecommerce.casu-net.com.ar/api/wishlist/"+productID,
       headers: { "x-access-token": contexto.token },
       data: {
         productId: productID,
@@ -71,7 +71,7 @@ Modelo.prototype = {
     var contexto = this;
     $.ajax({
       method: "GET",
-      url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+      url: "http://ecommerce.casu-net.com.ar/api/wishlist",
       headers: { "x-access-token": contexto.token }
     })
     .done(function( body ) {
@@ -87,7 +87,7 @@ Modelo.prototype = {
     var contexto = this;
     $.ajax({
       method: "GET",
-      url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+      url: "http://ecommerce.casu-net.com.ar/api/wishlist",
       headers: { "x-access-token": contexto.token }
     })
     .done(function( body ) {
